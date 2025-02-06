@@ -29,8 +29,8 @@ variable "vpc_name" {
 }
 
 variable "droplet_count" {
-  type    = number
-  default = 0
+  type    = string
+  default = "01"
 }
 
 variable "firewall_name" {

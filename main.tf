@@ -20,32 +20,14 @@ resource "digitalocean_droplet" "bot" {
   ssh_keys   = local.ssh_key_id
   tags       = local.tags
 
-  user_data = <<-EOF
-    #!/bin/bash
-    set -e
-
-    if ! id "solarbx" &>/dev/null; then
-      useradd -m -s /bin/bash solarbx
-    fi
-
-    mkdir -p /home/solarbx/.ssh
-    chmod 700 /home/solarbx/.ssh
-
-    echo "${file(var.solarbx_ssh_key_path)}" > /home/solarbx/.ssh/authorized_keys
-    chown -R solarbx:solarbx /home/solarbx/.ssh
-    chmod 600 /home/solarbx/.ssh/authorized_keys
-
-    # Disable password login for solarbx user
-    # echo "solarbx ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/solarbx
-    # chmod 440 /etc/sudoers.d/solarbx
-  EOF
-
+  user_data = templatefile("${path.module}/cloud-init.yaml.tftpl", {
+    ssh_key = file(var.solarbx_ssh_key_path)
+  })
 }
 
 resource "digitalocean_firewall" "firewall" {
   count = var.create_firewall
   name  = var.firewall_name
-  # droplet_ids = [digitalocean_droplet.bot.id]
 
   inbound_rule {
     protocol         = "tcp"
