@@ -1,15 +1,18 @@
 data "digitalocean_project" "name" {
-  name = var.project_name
+  count = var.enabled_do ? 1 : 0
+  name  = var.project_name
 }
 
 resource "digitalocean_project_resources" "proj" {
-  project = data.digitalocean_project.name.id
+  count   = var.enabled_do ? 1 : 0
+  project = data.digitalocean_project.name[0].id
   resources = [
-    digitalocean_droplet.bot.urn
+    digitalocean_droplet.bot[0].urn
   ]
 }
 
 resource "digitalocean_droplet" "bot" {
+  count      = var.enabled_do ? 1 : 0
   vpc_uuid   = local.vpc_uuid
   name       = local.droplet_name
   region     = var.region

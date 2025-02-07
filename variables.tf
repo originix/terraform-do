@@ -2,6 +2,14 @@ variable "do_token" {
   description = "DigitalOcean API Token"
   type        = string
   sensitive   = true
+  default     = ""
+}
+
+variable "vultr_token" {
+  description = "Vultr API Token"
+  type        = string
+  sensitive   = true
+  default     = ""
 }
 
 variable "region" {
@@ -56,13 +64,6 @@ variable "enable_monitoring" {
   default     = true
 }
 
-# variable "ssh_public_key_path" {
-#   description = "Path to SSH public key"
-#   type        = string
-#   default     = "~/.ssh/id_rsa.pub"
-# }
-
-
 variable "firewall_port_22" {
   type    = list(string)
   default = ["0.0.0.0/0", "::/0"]
@@ -84,10 +85,20 @@ variable "solarbx_ssh_key_path" {
 }
 
 variable "project_name" {
-  type = string
+  type    = string
   default = ""
 }
 variable "create_firewall" {
-  type = number
+  type    = number
   default = 0
+}
+
+variable "enabled_vultr" {
+  type    = bool
+  default = false
+}
+
+variable "enabled_do" {
+  type    = bool
+  default = true
 }
